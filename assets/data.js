@@ -116,6 +116,16 @@ window.SITE_DATA = {
     { title: 'Дети', hint: 'Арина и Давид', ids: ['arina', 'david'] }
   ],
 
+  /* Файлы кладутся в assets/photos/. Пока файла нет — показывается заглушка. */
+  gallery: [
+    { file: 'assets/photos/family-01.jpg', title: 'Семейное фото', caption: 'Добавьте описание' },
+    { file: 'assets/photos/family-02.jpg', title: 'Вместе', caption: 'Добавьте описание' },
+    { file: 'assets/photos/family-03.jpg', title: 'День семьи', caption: 'Добавьте описание' },
+    { file: 'assets/photos/family-04.jpg', title: 'Праздник', caption: 'Добавьте описание' },
+    { file: 'assets/photos/family-05.jpg', title: 'На прогулке', caption: 'Добавьте описание' },
+    { file: 'assets/photos/family-06.jpg', title: 'Дома', caption: 'Добавьте описание' }
+  ],
+
   guestCards: [
     {
       icon: 'info',

@@ -127,6 +127,8 @@
         '<div class="eyebrow">Только для своих</div>' +
         '<h1>' + esc(data.familyTitle) + '</h1>' +
         '<p class="lead">Выберите свой кабинет. У каждого члена семьи — свой набор разделов и свой функционал.</p>' +
+        '<div class="hero-actions"><button class="btn btn-secondary btn-small" type="button" data-scroll="gallery">' +
+          icon('devices') + ' Фотогалерея</button></div>' +
       '</div>' +
       notice('Вход пока демонстрационный: пароли и привязка аккаунтов будут добавлены позже. ' +
         'Выберите профиль, чтобы посмотреть устройство кабинета.') +
@@ -156,6 +158,24 @@
           '</a>';
         }).join('') + '</div>' +
       '</section>' +
+
+      '<section class="section" id="gallery">' +
+        '<div class="section-head"><div><div class="eyebrow">Только для своих</div><h2>Семейная галерея</h2></div>' +
+        '<p>Фото добавляются в `assets/photos/`</p></div>' +
+        '<div class="gallery-grid">' + (data.gallery || []).map(function (photo, index) {
+          return '<button class="photo-card" type="button" data-photo="' + esc(photo.file) + '" ' +
+            'data-caption="' + esc(photo.title + ' — ' + photo.caption) + '">' +
+            '<span class="photo-frame">' +
+              '<span class="photo-placeholder">' + icon('spark') + '<small>' + esc(photo.file) + '</small></span>' +
+              '<img src="' + esc(photo.file) + '" alt="' + esc(photo.title) + '" loading="lazy">' +
+            '</span>' +
+            '<span class="photo-info"><strong>' + esc(photo.title) + '</strong><small>' + esc(photo.caption) + '</small></span>' +
+          '</button>';
+        }).join('') + '</div>' +
+        '<p class="muted gallery-hint">Пока файла нет, вместо фото показывается рамка с именем файла. ' +
+        'Нажмите на загруженное фото, чтобы открыть его целиком.</p>' +
+      '</section>' +
+
       '<section class="section">' +
         '<div class="section-head"><div><h2>Общие разделы семьи</h2></div><p>Появятся позже</p></div>' +
         '<div class="grid grid-3">' +
@@ -342,6 +362,7 @@
       default: html = renderHome();
     }
     app.innerHTML = html;
+    wireGallery();
 
     var active = route.page === 'cabinet' ? 'family' : route.page;
     var links = document.querySelectorAll('[data-nav]');
@@ -354,7 +375,61 @@
     window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
+  /* ---------- Галерея ---------- */
+  function wireGallery() {
+    if (typeof app.querySelectorAll !== 'function') return;
+    var cards = app.querySelectorAll('.photo-card');
+    for (var i = 0; i < cards.length; i++) {
+      (function (card) {
+        var img = card.querySelector('img');
+        if (!img) return;
+        img.addEventListener('load', function () { card.classList.add('is-loaded'); });
+        img.addEventListener('error', function () { card.classList.add('is-missing'); });
+        if (img.complete) card.classList.add(img.naturalWidth > 0 ? 'is-loaded' : 'is-missing');
+      })(cards[i]);
+    }
+  }
+
+  function openLightbox(src, caption) {
+    var box = document.getElementById('lightbox');
+    if (!box) return;
+    var img = document.getElementById('lightbox-img');
+    var cap = document.getElementById('lightbox-caption');
+    if (img) { img.src = src; img.alt = caption; }
+    if (cap) cap.textContent = caption;
+    box.hidden = false;
+  }
+
+  function closeLightbox() {
+    var box = document.getElementById('lightbox');
+    if (box) box.hidden = true;
+  }
+
   /* ---------- События ---------- */
+  app.addEventListener('click', function (e) {
+    var scrollBtn = e.target.closest && e.target.closest('[data-scroll]');
+    if (scrollBtn) {
+      var target = document.getElementById(scrollBtn.getAttribute('data-scroll'));
+      if (target && target.scrollIntoView) target.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    var card = e.target.closest && e.target.closest('.photo-card');
+    if (card && card.classList.contains('is-loaded')) {
+      openLightbox(card.getAttribute('data-photo'), card.getAttribute('data-caption'));
+    }
+  });
+
+  if (document.addEventListener) {
+    document.addEventListener('click', function (e) {
+      if (e.target.id === 'lightbox' || (e.target.classList && e.target.classList.contains('lightbox-close'))) {
+        closeLightbox();
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  }
+
   app.addEventListener('submit', function (e) {
     if (e.target.id !== 'guestbook-form') return;
     e.preventDefault();

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Семейный портал — каркас сайта для общения семьи и гостевой информации.">
+  <title>Семейный портал</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#/home" aria-label="На главную">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 11.2 12 4l9 7.2"/><path d="M5.5 9.8V20h13V9.8"/><path d="M9.7 20v-5.4h4.6V20"/>
+          </svg>
+        </span>
+        <span class="brand-text">Семейный<span> портал</span></span>
+      </a>
+
+      <nav class="main-nav" aria-label="Основная навигация">
+        <a href="#/home" data-nav="home">Главная</a>
+        <a href="#/family" data-nav="family">Для семьи</a>
+        <a href="#/guest" data-nav="guest">Для гостей</a>
+      </nav>
+
+      <div class="header-actions">
+        <span class="badge badge-demo" title="Сейчас это каркас интерфейса">Демо-каркас</span>
+        <a class="btn btn-small btn-primary" href="#/family">Войти в кабинет</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="app" class="container" tabindex="-1">
+    <div class="loading">Загрузка…</div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Семейный портал</strong>
+        <p>Локальный каркас сайта. Данные демонстрационные.</p>
+      </div>
+      <div class="footer-note">
+        <span class="dot dot-green"></span> Работает офлайн, в локальной сети
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

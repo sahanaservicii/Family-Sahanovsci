@@ -14,6 +14,7 @@
   var guestbook = loadGuestbook();
   var demoSwitches = { light: false, climate: true, mode: false };
   var checkedTasks = {};
+  var portal = { enabled: !!(window.PORTAL_AUTH && window.PORTAL_AUTH.required), authenticated: !!(window.PORTAL_AUTH && window.PORTAL_AUTH.authenticated), user: null, firstLogin: false };
 
   /* ---------- Утилиты ---------- */
   function esc(value) {
@@ -65,6 +66,56 @@
 
   function notice(text) {
     return '<div class="notice">' + icon('info') + '<span>' + esc(text) + '</span></div>';
+  }
+
+  /* ---------- Портал (локальный защищённый режим) ---------- */
+  async function portalApi(path, opts) {
+    var r = await fetch(path, Object.assign({credentials:'same-origin', headers:{'Content-Type':'application/json'}}, opts||{}));
+    var t = await r.text(); var j={}; try{ j=JSON.parse(t||'{}'); }catch(e){ j={ok:false,error:t}; }
+    j._status=r.status; return j;
+  }
+  async function refreshPortal() {
+    if (!portal.enabled) return;
+    try {
+      var me = await portalApi('/api/portal/me', {method:'GET'});
+      portal.authenticated = !!me.authenticated;
+      portal.firstLogin = !!me.first_login;
+      portal.user = me.authenticated ? {id:me.id,name:me.name,is_admin:!!me.is_admin} : null;
+      window.PORTAL_AUTH = window.PORTAL_AUTH || {}; window.PORTAL_AUTH.authenticated = portal.authenticated;
+    } catch(e) {}
+  }
+  function renderPortalLogin(reason) {
+    return '<div class="page-head"><div class="eyebrow">Защищённый вход</div><h1>Вход для семьи</h1>' +
+      '<p class="lead">' + esc(reason || 'Личные кабинеты и галерея доступны только после входа.') + '</p></div>' +
+      '<div class="card" style="max-width:560px"><form id="portal-login-form" class="guestbook-form">' +
+      '<label><strong>Логин</strong><input id="portal-user" autocomplete="username" required></label>' +
+      '<label><strong>Пароль</strong><input id="portal-pass" type="password" autocomplete="current-password" required></label>' +
+      '<div class="row-actions"><button class="btn btn-primary" type="submit">Войти</button></div>' +
+      '<p class="muted" id="portal-login-msg" style="margin-top:10px"></p></form></div>';
+  }
+  function renderPortalChangePw() {
+    return '<div class="page-head"><div class="eyebrow">Первый вход</div><h1>Смените пароль</h1>' +
+      '<p class="lead">Для защиты кабинета задайте новый пароль (минимум 8 символов).</p></div>' +
+      '<div class="card" style="max-width:560px"><form id="portal-pw-form" class="guestbook-form">' +
+      '<label><strong>Текущий пароль</strong><input id="portal-cur" type="password" autocomplete="current-password" required></label>' +
+      '<label><strong>Новый пароль</strong><input id="portal-new" type="password" autocomplete="new-password" required minlength="8"></label>' +
+      '<label><strong>Повтор нового пароля</strong><input id="portal-new2" type="password" autocomplete="new-password" required minlength="8"></label>' +
+      '<div class="row-actions"><button class="btn btn-primary" type="submit">Сменить пароль</button></div>' +
+      '<p class="muted" id="portal-pw-msg" style="margin-top:10px"></p></form></div>';
+  }
+  function syncPortalHeader() {
+    var actions = document.querySelector('.header-actions');
+    if (!actions) return;
+    var old = document.getElementById('portal-user-badge');
+    if (old) old.remove();
+    if (portal.enabled && portal.authenticated && portal.user) {
+      var span = document.createElement('span');
+      span.id = 'portal-user-badge';
+      span.className = 'badge badge-soft';
+      span.style.marginRight = '8px';
+      span.innerHTML = esc(portal.user.name) + ' <button class="btn btn-small" data-portal-logout style="margin-left:8px;padding:2px 8px">Выйти</button>';
+      actions.insertBefore(span, actions.firstChild);
+    }
   }
 
   /* ---------- Страницы ---------- */
@@ -355,14 +406,22 @@
   function render() {
     var route = currentRoute();
     var html;
-    switch (route.page) {
-      case 'guest': html = renderGuest(); break;
-      case 'family': html = renderFamily(); break;
-      case 'cabinet': html = renderCabinet(route.member, route.module); break;
-      default: html = renderHome();
+    var gated = portal.enabled && (route.page === 'family' || route.page === 'cabinet');
+    if (gated && !portal.authenticated) {
+      html = renderPortalLogin('Войдите, чтобы открыть раздел семьи и личные кабинеты.');
+    } else if (gated && portal.firstLogin) {
+      html = renderPortalChangePw();
+    } else {
+      switch (route.page) {
+        case 'guest': html = renderGuest(); break;
+        case 'family': html = renderFamily(); break;
+        case 'cabinet': html = renderCabinet(route.member, route.module); break;
+        default: html = renderHome();
+      }
     }
     app.innerHTML = html;
     wireGallery();
+    syncPortalHeader();
 
     var active = route.page === 'cabinet' ? 'family' : route.page;
     var links = document.querySelectorAll('[data-nav]');
@@ -406,7 +465,37 @@
   }
 
   /* ---------- События ---------- */
-  app.addEventListener('click', function (e) {
+  app.addEventListener('submit', async function (e) {
+    if (e.target.id === 'portal-login-form') {
+      e.preventDefault();
+      var msg = document.getElementById('portal-login-msg');
+      var u = document.getElementById('portal-user').value.trim();
+      var p = document.getElementById('portal-pass').value;
+      var r = await portalApi('/api/portal/login', {method:'POST', body: JSON.stringify({username:u,password:p})});
+      if (!r.ok) { if (msg) msg.textContent = r.error || 'Ошибка входа'; return; }
+      await refreshPortal();
+      if (portal.firstLogin) { render(); }
+      else { location.reload(); }
+      return;
+    }
+    if (e.target.id === 'portal-pw-form') {
+      e.preventDefault();
+      var msg2 = document.getElementById('portal-pw-msg');
+      var cur = document.getElementById('portal-cur').value;
+      var n1 = document.getElementById('portal-new').value;
+      var n2 = document.getElementById('portal-new2').value;
+      if (n1 !== n2) { if (msg2) msg2.textContent = 'Пароли не совпадают'; return; }
+      var r2 = await portalApi('/api/portal/change-password', {method:'POST', body: JSON.stringify({current_password:cur,new_password:n1})});
+      if (!r2.ok) { if (msg2) msg2.textContent = r2.error || 'Ошибка'; return; }
+      await refreshPortal();
+      location.reload();
+      return;
+    }
+  }, true);
+
+  app.addEventListener('click', async function (e) {
+    var logoutBtn = e.target.closest && e.target.closest('[data-portal-logout]');
+    if (logoutBtn) { e.preventDefault(); await portalApi('/api/portal/logout',{method:'POST'}); await refreshPortal(); location.hash='#/home'; location.reload(); return; }
     var scrollBtn = e.target.closest && e.target.closest('[data-scroll]');
     if (scrollBtn) {
       var target = document.getElementById(scrollBtn.getAttribute('data-scroll'));
@@ -457,6 +546,10 @@
   });
 
   window.addEventListener('hashchange', render);
-  if (!location.hash) location.hash = '#/home';
-  render();
+  async function boot() {
+    if (portal.enabled) await refreshPortal();
+    if (!location.hash) location.hash = '#/home';
+    render();
+  }
+  boot();
 })();

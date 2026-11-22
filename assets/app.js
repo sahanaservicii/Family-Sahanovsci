@@ -131,13 +131,27 @@
       notice('Вход пока демонстрационный: пароли и привязка аккаунтов будут добавлены позже. ' +
         'Выберите профиль, чтобы посмотреть устройство кабинета.') +
       '<section class="section">' +
+        '<div class="section-head"><div><h2>Кто есть кто</h2></div><p>Семейные связи</p></div>' +
+        '<div class="grid grid-3">' + (data.familyTree || []).map(function (group) {
+          return '<div class="card"><h3>' + esc(group.title) + '</h3>' +
+            '<p class="muted">' + esc(group.hint) + '</p>' +
+            '<ul class="simple-list tree-list">' + group.ids.map(function (id) {
+              var person = memberById(id);
+              if (!person) return '';
+              return '<li><a href="#/cabinet/' + encodeURIComponent(id) + '">' + esc(person.name) + '</a> — ' +
+                esc(person.relation) + '</li>';
+            }).join('') + '</ul></div>';
+        }).join('') + '</div>' +
+      '</section>' +
+
+      '<section class="section">' +
         '<div class="section-head"><div><h2>Личные кабинеты</h2></div><p>' + data.members.length + ' профиля в каркасе</p></div>' +
         '<div class="member-grid">' + data.members.map(function (m) {
           return '<a class="member-card" href="#/cabinet/' + encodeURIComponent(m.id) + '" style="--avatar:' + esc(m.color) + '">' +
             '<span class="avatar">' + esc(m.initials) + '</span>' +
-            '<span class="member-name">' + esc(m.name) + '</span>' +
+            '<span class="member-name">' + esc(m.name) + (m.short ? ' (' + esc(m.short) + ')' : '') + '</span>' +
             '<span class="member-meta">' + esc(m.role) + ' · ' + m.modules.length + ' разделов</span>' +
-            '<span class="member-note">' + esc(m.note) + '</span>' +
+            '<span class="member-note">' + esc(m.relation) + '</span>' +
             '<span class="status-line"><span class="dot dot-green"></span>' + esc(m.status) + '</span>' +
           '</a>';
         }).join('') + '</div>' +
@@ -242,7 +256,8 @@
       '<div class="cabinet">' + sidebar +
         '<div class="cabinet-content">' +
           '<div class="cabinet-top">' +
-            '<div><h1>' + esc(mod.title) + '</h1><p>' + esc(mod.subtitle) + '</p></div>' +
+            '<div><h1>' + esc(mod.title) + '</h1><p>' + esc(mod.subtitle) + '</p>' +
+            '<p class="cabinet-relation">' + esc(member.relation) + '</p></div>' +
             '<div class="header-actions"><a class="btn btn-secondary btn-small" href="#/family">Сменить кабинет</a></div>' +
           '</div>' +
           '<div class="widgets">' + widgets + '</div>' +
@@ -277,7 +292,8 @@
       case 'profile':
         body = '<div class="profile-grid" style="--avatar:' + esc(member.color) + '">' +
           '<div class="avatar">' + esc(member.initials) + '</div>' +
-          '<dl><dt>Имя</dt><dd>' + esc(member.name) + '</dd>' +
+          '<dl><dt>Имя</dt><dd>' + esc(member.name) + (member.short ? ' (' + esc(member.short) + ')' : '') + '</dd>' +
+          '<dt>Родство</dt><dd>' + esc(member.relation) + '</dd>' +
           '<dt>Роль</dt><dd>' + esc(member.role) + '</dd>' +
           '<dt>Статус</dt><dd>' + esc(member.status) + '</dd>' +
           '<dt>Кабинет</dt><dd>' + esc(member.id) + '</dd></dl></div>';

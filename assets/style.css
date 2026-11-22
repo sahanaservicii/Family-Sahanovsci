@@ -227,6 +227,7 @@ p { margin: 0; }
 }
 .cabinet-top h1 { font-size: 26px; }
 .cabinet-top p { color: var(--ink-soft); font-size: 14px; margin-top: 4px; }
+.cabinet-relation { color: var(--primary) !important; font-weight: 700; }
 .widgets { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .widget.wide { grid-column: 1 / -1; }
 .widget { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
@@ -243,6 +244,8 @@ p { margin: 0; }
 .simple-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .simple-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
 .simple-list li::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); margin-top: 8px; flex: none; }
+.tree-list a { color: var(--primary); font-weight: 700; }
+.tree-list a:hover { text-decoration: underline; }
 
 .task-list { display: grid; gap: 8px; }
 .task-item {

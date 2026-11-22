@@ -1,6 +1,6 @@
 /*
- * Демонстрационные данные каркаса.
- * Никаких реальных имён, устройств и секретов: всё это заглушки под будущий функционал.
+ * Данные сайта. Имена и связи заданы владельцем сайта.
+ * Устройства и личные данные по-прежнему не подключены — только структура кабинетов.
  */
 window.SITE_DATA = {
   familyTitle: 'Наша семья',
@@ -8,14 +8,60 @@ window.SITE_DATA = {
 
   members: [
     {
-      id: 'anna',
-      name: 'Анна',
-      role: 'Взрослый',
+      id: 'andrey',
+      name: 'Андрей',
+      role: 'Папа, муж',
       initials: 'А',
       color: '#2f6d63',
       status: 'Дома',
-      note: 'Общие вопросы, бюджет, расписание',
+      relation: 'Папа Арины и Давида, муж Анны; сын Андрея-старшего и Елены',
+      note: 'Общие вопросы, умный дом, планы',
       modules: ['overview', 'smart-home', 'devices', 'personal', 'tasks', 'schedule', 'notes', 'settings']
+    },
+    {
+      id: 'anna',
+      name: 'Анна',
+      short: 'Аня',
+      role: 'Мама, жена',
+      initials: 'А',
+      color: '#a4586d',
+      status: 'Дома',
+      relation: 'Жена Андрея, мама Арины и Давида; дочь Иры и Михаила',
+      note: 'Семейные планы, задачи, заметки',
+      modules: ['overview', 'smart-home', 'devices', 'personal', 'tasks', 'schedule', 'notes', 'settings']
+    },
+    {
+      id: 'arina',
+      name: 'Арина',
+      role: 'Ребёнок',
+      initials: 'А',
+      color: '#b56a8b',
+      status: 'Дома',
+      relation: 'Дочь Андрея и Анны, сестра Давида',
+      note: 'Задачи, расписание, заметки',
+      modules: ['overview', 'tasks', 'schedule', 'notes', 'personal']
+    },
+    {
+      id: 'david',
+      name: 'Давид',
+      role: 'Ребёнок',
+      initials: 'Д',
+      color: '#4a6b9a',
+      status: 'Дома',
+      relation: 'Сын Андрея и Анны, брат Арины',
+      note: 'Задачи, расписание',
+      modules: ['overview', 'tasks', 'schedule', 'personal']
+    },
+    {
+      id: 'ira',
+      name: 'Ира',
+      role: 'Взрослый',
+      initials: 'И',
+      color: '#b46c2f',
+      status: 'Дома',
+      relation: 'Мама Анны, дочь Нельи',
+      note: 'Семейные связи, задачи',
+      modules: ['overview', 'personal', 'tasks', 'schedule', 'notes', 'settings']
     },
     {
       id: 'mikhail',
@@ -23,30 +69,51 @@ window.SITE_DATA = {
       role: 'Взрослый',
       initials: 'М',
       color: '#8a5a3b',
-      status: 'На работе',
+      status: 'Дома',
+      relation: 'Папа Анны',
       note: 'Умный дом, устройства, техника',
       modules: ['overview', 'smart-home', 'devices', 'personal', 'tasks', 'schedule', 'settings']
     },
     {
-      id: 'darya',
-      name: 'Дарья',
-      role: 'Ребёнок',
-      initials: 'Д',
-      color: '#a4586d',
+      id: 'elena',
+      name: 'Елена',
+      role: 'Взрослый',
+      initials: 'Е',
+      color: '#6a7f5b',
       status: 'Дома',
-      note: 'Задачи, заметки, расписание',
-      modules: ['overview', 'tasks', 'schedule', 'notes', 'personal']
+      relation: 'Мама Андрея, бабушка Арины и Давида',
+      note: 'Семейные связи, заметки',
+      modules: ['overview', 'personal', 'tasks', 'schedule', 'notes']
     },
     {
-      id: 'timofey',
-      name: 'Тимофей',
-      role: 'Ребёнок',
-      initials: 'Т',
-      color: '#4a6b9a',
-      status: 'Уроки',
-      note: 'Задачи и расписание',
-      modules: ['overview', 'tasks', 'schedule', 'personal']
+      id: 'andrey-sr',
+      name: 'Андрей-старший',
+      short: 'Андрей (старший)',
+      role: 'Взрослый',
+      initials: 'А',
+      color: '#556b7a',
+      status: 'Дома',
+      relation: 'Папа Андрея, дед Арины и Давида',
+      note: 'Семейные связи',
+      modules: ['overview', 'personal', 'tasks', 'schedule']
+    },
+    {
+      id: 'nelya',
+      name: 'Нелья',
+      role: 'Взрослый',
+      initials: 'Н',
+      color: '#8e6a8f',
+      status: 'Дома',
+      relation: 'Мама Иры, бабушка Анны',
+      note: 'Семейные связи',
+      modules: ['overview', 'personal', 'schedule', 'notes']
     }
+  ],
+
+  familyTree: [
+    { title: 'Старшее поколение', hint: 'Родители и бабушки/дедушки', ids: ['andrey-sr', 'elena', 'nelya'] },
+    { title: 'Родители', hint: 'Папы и мамы', ids: ['andrey', 'anna', 'ira', 'mikhail'] },
+    { title: 'Дети', hint: 'Арина и Давид', ids: ['arina', 'david'] }
   ],
 
   guestCards: [
@@ -159,8 +226,13 @@ window.SITE_MODULES = {
 
 /* Какие задачи показывать в демо-списке каждого члена семьи. */
 window.SITE_DEMO_TASKS = {
+  andrey: ['Согласовать планы на выходные', 'Проверить демонстрационные выключатели'],
   anna: ['Согласовать планы на выходные', 'Проверить общий список покупок'],
+  arina: ['Собрать рюкзак', 'Добавить идею в заметки'],
+  david: ['Почитать 20 минут', 'Отметить событие в расписании'],
+  ira: ['Уточнить семейные планы', 'Записать важную дату'],
   mikhail: ['Проверить демонстрационные выключатели', 'Обновить список устройств'],
-  darya: ['Приготовить уроки', 'Добавить идею в заметки'],
-  timofey: ['Почитать 20 минут', 'Отметить событие в расписании']
+  elena: ['Позвонить родным', 'Записать мысль в заметки'],
+  'andrey-sr': ['Уточнить семейные новости', 'Отметить дату в расписании'],
+  nelya: ['Записать семейную историю', 'Отметить важную дату']
 };

@@ -1,7 +1,7 @@
 {
   "SITE_DATA": {
-    "familyTitle": "Наша семья",
-    "familyTagline": "Общее пространство для своих — и понятная информация для гостей.",
+    "familyTitle": "Семья Сахановских",
+    "familyTagline": "Место, где семья — дома, а гости — желанны.",
     "members": [
       {
         "id": "andrey",
@@ -196,33 +196,13 @@
     ],
     "gallery": [
       {
-        "file": "assets/photos/family-01.jpg",
-        "title": "Семейное фото",
-        "caption": "Добавьте описание"
+        "file": "assets/photos/new-photo.jpg",
+        "title": "Новое фото",
+        "caption": "Описание"
       },
       {
-        "file": "assets/photos/family-02.jpg",
-        "title": "Вместе",
-        "caption": "Добавьте описание"
-      },
-      {
-        "file": "assets/photos/family-03.jpg",
-        "title": "День семьи",
-        "caption": "Добавьте описание"
-      },
-      {
-        "file": "assets/photos/family-04.jpg",
-        "title": "Праздник",
-        "caption": "Добавьте описание"
-      },
-      {
-        "file": "assets/photos/family-05.jpg",
-        "title": "На прогулке",
-        "caption": "Добавьте описание"
-      },
-      {
-        "file": "assets/photos/family-06.jpg",
-        "title": "Дома",
+        "file": "assets/photos/47383.jpg",
+        "title": "47383.jpg",
         "caption": "Добавьте описание"
       }
     ],
@@ -250,14 +230,9 @@
     ],
     "news": [
       {
-        "date": "пример",
-        "title": "Новость появится здесь",
+        "date": "13.11.2026",
+        "title": "Birthday Арины ",
         "text": "Общие объявления для семьи и гостей."
-      },
-      {
-        "date": "пример",
-        "title": "Раздел в разработке",
-        "text": "Здесь будет лента событий семьи."
       }
     ]
   },
@@ -466,5 +441,94 @@
       "Записать семейную историю",
       "Отметить важную дату"
     ]
+  },
+  "SITE_CONFIG": {
+    "theme": {
+      "accent": "#2f6d63",
+      "accentDark": "#24554d",
+      "familyTitle": "Семья Сахановских",
+      "familyTagline": "Место, где семья — дома, а гости — желанны.",
+      "heroTitle": "Место, где семья — дома, а гости — желанны"
+    },
+    "sections": {
+      "hero": true,
+      "audience": true,
+      "news": true,
+      "guestbook": true,
+      "gallery": true,
+      "familyTree": true,
+      "guestCards": true
+    },
+    "cabinetModules": {
+      "andrey": [
+        "overview",
+        "smart-home",
+        "devices",
+        "personal",
+        "tasks",
+        "schedule",
+        "notes",
+        "settings"
+      ],
+      "anna": [
+        "overview",
+        "smart-home",
+        "devices",
+        "personal",
+        "tasks",
+        "schedule",
+        "notes",
+        "settings"
+      ],
+      "arina": [
+        "overview",
+        "tasks",
+        "schedule",
+        "notes",
+        "personal"
+      ],
+      "david": [
+        "overview",
+        "tasks",
+        "schedule",
+        "personal"
+      ],
+      "ira": [
+        "overview",
+        "personal",
+        "tasks",
+        "schedule",
+        "notes",
+        "settings"
+      ],
+      "mikhail": [
+        "overview",
+        "smart-home",
+        "devices",
+        "personal",
+        "tasks",
+        "schedule",
+        "settings"
+      ],
+      "elena": [
+        "overview",
+        "personal",
+        "tasks",
+        "schedule",
+        "notes"
+      ],
+      "andrey-sr": [
+        "overview",
+        "personal",
+        "tasks",
+        "schedule"
+      ],
+      "nelya": [
+        "overview",
+        "personal",
+        "schedule",
+        "notes"
+      ]
+    }
   }
 }

@@ -1,0 +1,19 @@
+[Unit]
+Description=Family Portal (local LAN)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/family-site
+ExecStart=/usr/bin/python3 /opt/family-site/portal_server.py --host 0.0.0.0 --port 8787 --users-file /etc/family-portal/users.json
+Restart=on-failure
+RestartSec=3
+User=familyportal
+Group=familyportal
+Environment=FAMILY_SECURE_COOKIE=0
+# For HTTPS behind reverse proxy set FAMILY_SECURE_COOKIE=1
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

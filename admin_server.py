@@ -150,7 +150,8 @@ def generate_data_js(data: dict) -> None:
         "/* Автоматически сгенерировано admin_server.py из assets/site-data.json. */\n"
         "window.SITE_DATA = " + json.dumps(data["SITE_DATA"], ensure_ascii=False, indent=2) + ";\n\n"
         "window.SITE_MODULES = " + json.dumps(data["SITE_MODULES"], ensure_ascii=False, indent=2) + ";\n\n"
-        "window.SITE_DEMO_TASKS = " + json.dumps(data["SITE_DEMO_TASKS"], ensure_ascii=False, indent=2) + ";\n"
+        "window.SITE_DEMO_TASKS = " + json.dumps(data["SITE_DEMO_TASKS"], ensure_ascii=False, indent=2) + ";\n\n"
+        "window.SITE_CONFIG = " + json.dumps(data.get("SITE_CONFIG", {}), ensure_ascii=False, indent=2) + ";\n"
     )
     DATA_JS.write_text(js, encoding="utf-8")
 

@@ -6,3 +6,6 @@ Thumbs.db
 
 __pycache__/
 *.pyc
+
+# приватные фото пользователей — не публикуются
+assets/user-photos/
